@@ -34,14 +34,14 @@
                 ; (:file "config")
                 ; (:module "extension"
                 ;          :components ((:module "ipynb"
-                ;                                :components ((:file "seriarize")
-                ;                                             (:file "deseriarize")))
+                ;                                :components ((:file "serialize")
+                ;                                             (:file "deserilrize")))
                 ;                       ;(:module "lisp"
-                ;                       ;         :components ((:file "seriarize")
-                ;                       ;                      (:file "deseriarize")))
+                ;                       ;         :components ((:file "serialize")
+                ;                       ;                      (:file "deserialize")))
                 ;                       ;(:module "html"
-                ;                       ;         :components ((:file "seriarize")
-                ;                       ;                      (:file "deseriarize")))
+                ;                       ;         :components ((:file "serialize")
+                ;                       ;                      (:file "deserialize")))
                 ;                       ))
                 ; (:module "view"
                 ;          :components ((:file "base")
