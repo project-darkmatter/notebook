@@ -21,19 +21,22 @@
                :jsonrpc          ;BSD-2-Clause
                :yason            ;BSD-2-Clause
                :cl-fad           ;BSD-2-Clause
+               :djula            ;MIT
                )
   :components ((:module "src"
                 :components
-                ;((:file "main" :depends-on (;"config"
-                ;                            ;"auth"
-                ;                            ;"extension"
-                ;                            ;"view"
-                ;                            ;"services"
-                ;                            ;"utils"
-                ;                            ))
+                (
+                (:file "main" :depends-on (;"config"
+                                            "services"
+                                            "utils"
+                                            ))
                 ; (:file "config")
-                ; (:module "extension"
-                ;          :components ((:module "ipynb"
+                 (:module "utils"
+                          :components ((:file "split")))
+                 (:file "extention" :depends-on ("extentions"))
+                 (:module "extentions"
+                ;          :components (
+                ;                        (:module "ipynb"
                 ;                                :components ((:file "serialize")
                 ;                                             (:file "deserilrize")))
                 ;                       ;(:module "lisp"
@@ -42,18 +45,23 @@
                 ;                       ;(:module "html"
                 ;                       ;         :components ((:file "serialize")
                 ;                       ;                      (:file "deserialize")))
-                ;                       ))
-                ; (:module "view"
-                ;          :components ((:file "base")
-                ;                       (:file "notebook")
-                ;                       ;(:file "tree")
-                ;                       ))
-                ; (:module "services"
-                ;          :components (;(:file "apis")
-                ;                       (:file "pages" :depends-on ("view"))
-                ;                       (:file "static")
-                ;                       ;(:file "files" :depends-on ("extension"))
-                ;                       )))
+                ;                       )
+                )
+                 (:module "view"
+                          :components ((:file "base")
+                                       (:file "notebook" :depends-on ("base"))
+                                       ;(:file "tree")
+                                       ))
+                 (:module "services"
+                          :components (;(:file "api")
+                                       (:file "notebook")
+                ;                       ;(:file "relative")
+                ;                       ;(:file "absolute")
+                ;                       ;(:file "store")
+                                      )
+                          :depends-on ("extention"
+                                       "view"))
+                )
                 ))
   :description ""
   :long-description
