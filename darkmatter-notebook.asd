@@ -35,18 +35,15 @@
                           :components ((:file "split")))
                  (:file "extention" :depends-on ("extentions"))
                  (:module "extentions"
-                ;          :components (
-                ;                        (:module "ipynb"
-                ;                                :components ((:file "serialize")
-                ;                                             (:file "deserilrize")))
+                          :components ((:file "ext-ipynb")
                 ;                       ;(:module "lisp"
                 ;                       ;         :components ((:file "serialize")
                 ;                       ;                      (:file "deserialize")))
                 ;                       ;(:module "html"
                 ;                       ;         :components ((:file "serialize")
                 ;                       ;                      (:file "deserialize")))
-                ;                       )
-                )
+                                       )
+                          )
                  (:module "view"
                           :components ((:file "base")
                                        (:file "notebook" :depends-on ("base"))
