@@ -1,0 +1,3 @@
+[submodule "static/css/axion"]
+	path = static/css/axion
+	url = https://github.com/tamamu/axion.git

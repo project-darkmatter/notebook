@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="static/css/axion/axion.css">
+  <link rel="stylesheet" href="static/js/codemirror/codemirror.css">
+  <link rel="stylesheet" href="static/css/cell.css">
+  <script src="static/css/axion/axion.js"></script>
+  <script src="static/js/codemirror/codemirror.js"></script>
+  <script src="static/js/codemirror/commonlisp.js"></script>
+</head>
+<body class="ax-background" fit="true">
+  <header class="ax-appbar ax-primary">
+    <div class="ax-left ax-middle">
+      <h1>Untitled</h1>
+    </div>
+    <div class="ax-right ax-middle">
+    </div>
+  </header>
+  <ul class="ax-dropdown-menubar ax-primary" tabindex="0">
+    <li class="ax-dropdown">
+      <span class="ax-dropdown-container">
+        <p class="ax-dropdown-label" padding>File</p>
+        <ul class="ax-dropdown-menu ax-list ax-primary ax-panel" unstyle item-highlight item-padding>
+          <li tabindex="0">Save</li>
+          <li tabindex="0">Regenerate package</li>
+        </ul>
+      </span>
+    </li>
+    <li class="ax-dropdown">
+      <span class="ax-dropdown-container">
+        <p class="ax-dropdown-label" padding>Cell</p>
+        <ul class="ax-dropdown-menu ax-list ax-primary ax-panel" unstyle item-highlight item-padding>
+          <li tabindex="0">Eval</li>
+          <li tabindex="0">Eval and proceed</li>
+          <li tabindex="0">Switch language</li>
+          <li tabindex="0">Previous</li>
+          <li tabindex="0">Next</li>
+          <li tabindex="0">Swap current to previous</li>
+          <li tabindex="0">Swap current to next</li>
+          <li tabindex="0">Prepend</li>
+          <li tabindex="0">Append</li>
+          <li tabindex="0">Remove</li>
+        </ul>
+      </span>
+    </li>
+    <li class="ax-dropdown">
+      <span class="ax-dropdown-container">
+        <p class="ax-dropdown-label" padding>View</p>
+        <ul class="ax-dropdown-menu ax-list ax-primary ax-panel" unstyle item-highlight item-padding>
+          <li tabindex="0">Toggle drawer</li>
+          <li tabindex="0">Start slide mode</li>
+        </ul>
+      </span>
+    </li>
+    <li class="ax-dropdown">
+      <span class="ax-dropdown-container">
+        <p class="ax-dropdown-label" padding>Tools</p>
+        <ul class="ax-dropdown-menu ax-list ax-primary ax-panel" unstyle item-highlight item-padding>
+          <li tabindex="0">Eval notebook</li>
+          <li tabindex="0">Vim mode</li>
+          <li tabindex="0">Emacs mode</li>
+          <li tabindex="0">Default mode</li>
+        </ul>
+      </span>
+    </li>
+  </ul>
+
+  <section class="ax-with-sidebar" maximize>
+    <div id="dm-sidebar" class="ax-sidebar ax-primary ax-panel">
+    </div>
+    <ul class="ax-container ax-list" unstyle item-spacing vpad>
+      <li class="ax-panel ax-normal" w-1-2 center>
+        <textarea class="dm-editor">(format t "Hello world!~%")</textarea>
+        <script>
+          for(let elm of document.querySelectorAll(".dm-editor")) {
+            let editor = CodeMirror.fromTextArea(elm, {
+              mode: "commonlisp",
+              lineNumbers: true,
+              tabSize: 2,
+              matchBrackets: true,
+              viewportMargin: Infinity
+            });
+            editor.setSize("100%", "auto");
+          }
+        </script>
+      </li>
+      <li class="ax-panel ax-normal" w-1-2 center>
+        <div class="ax-container ax-content">
+          <pre>Hello world!
+          </pre>
+        </div>
+      </li>
+    </ul>
+  </section>
+</body>
+</html>
