@@ -33,6 +33,8 @@
                 ; (:file "config")
                  (:module "utils"
                           :components ((:file "split")))
+                 (:module "domains"
+                          :components ((:file "cell")))
                  (:file "extention" :depends-on ("extentions"))
                  (:module "extentions"
                           :components ((:file "ext-ipynb")
