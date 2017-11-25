@@ -53,7 +53,15 @@
   (evalue nil :type %ipynb.error-output-evalue)
   (traceback nil :type %ipynb.error-output-traceback))
 
-
+(deftype %ipynb-format.metadata () 'hash-table)
+(deftype %ipynb-format.nbformat () 'integer)
+(deftype %ipynb-format.nbformat-minor () 'integer)
+(deftype %ipynb-format.cells () 'list)
+(defstruct ipynb-format
+  (metadata nil :type %ipynb-format.metadata)
+  (nbformat 4 :type %ipynb-format.nbformat)
+  (nbformat-minor 0 :type %ipynb-format.nbformat-minor)
+  (cells nil :type %ipynb-format.cells))
 
 (defun serialize.ipynb ()
   )
