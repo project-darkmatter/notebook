@@ -156,6 +156,42 @@
       (yason:encode-object-element "cells"
         (ipynb-format-cells object)))))
 
+(defun %make-ipynb-format.metadata ()
+  (let ((ht (make-hash-table :test #'equal)))
+    (setf (gethash "signature" ht) "hex-digest"
+          (gethash "kernel_info" ht) (let ((ki (make-hash-table :test #'equal)))
+                                       (setf (gethash "name" ki) "darkmatter")
+                                       ki)
+          (gethash "language_info" ht) (let ((li (make-hash-table :test #'equal)))
+                                         (setf (gethash "name" li) "common-lisp"
+                                               (gethash "version" li) "1.0"
+                                               (gethash "codemirror_mode" li) "commonlisp")
+                                         li))
+    ht))
+
+(defun %convert-to-ipynb-code-cell (cell)
+  ()) ;; TODO
+
+(defun %map-to-ipynb-cell (cell)
+  (typecase cell
+    (code-cell-entity
+      (%convert-to-ipynb-code-cell cell))
+    (note-cell-entity
+      (case (note-cell-format cell)
+        (:markdown
+          (%convert-to-ipynb-markdown-cell cell))
+        (:asciidoc
+          (%convert-to-ipynb-raw-cell-from-asciidoc cell))
+        (:latex
+          (%convert-to-ipynb-raw-cell-from-latex cell))))
+    (raw-cell-entity
+      (%convert-to-ipynb-raw-cell cell))))
+
+(defun map-to-ipynb (cells)
+  (make-ipynb-format
+    :metadata (%make-ipynb-format.metadata)
+    :cells (map)))
+
 (defun serialize.ipynb ()
   )
 
