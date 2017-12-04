@@ -32,7 +32,8 @@
                                             ))
                 ; (:file "config")
                  (:module "utils"
-                          :components ((:file "split")))
+                          :components ((:file "split")
+                                       (:file "convert")))
                  (:module "domains"
                           :components ((:file "cell")))
                  (:file "extention" :depends-on ("extentions"))
@@ -45,7 +46,8 @@
                 ;                       ;         :components ((:file "serialize")
                 ;                       ;                      (:file "deserialize")))
                                        )
-                          )
+                          :depends-on ("utils"
+                                       "domains"))
                  (:module "view"
                           :components ((:file "base")
                                        (:file "notebook" :depends-on ("base"))
