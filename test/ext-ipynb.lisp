@@ -37,3 +37,5 @@
 
 (subtest "Deserialize .ipynb"
   )
+
+(finalize)
