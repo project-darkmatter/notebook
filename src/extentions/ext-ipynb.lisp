@@ -2,6 +2,7 @@
 (defpackage darkmatter/notebook/extentions/ipynb
   (:use :cl)
   (:import-from :darkmatter/notebook/domains/cell
+                :make-code-cell-entity
                 :code-cell-entity
                 :code-cell-source
                 :code-cell-execution-count
@@ -38,7 +39,8 @@
                 :plist-to-hash-table)
   (:export :map-to-ipynb
            :serialize.ipynb
-           :deserialize.ipynb))
+           :deserialize.ipynb
+           :convert-to-cells-from-ipynb))
 (in-package :darkmatter/notebook/extentions/ipynb)
 
 (defmethod yason:encode ((symbol symbol) &optional (stream *standard-output*))
@@ -420,3 +422,78 @@
 
 (defun deserialize.ipynb (str)
   (hash-table-to-ipynb (yason:parse str)))
+
+(defun %convert-to-stream-output-entity (output)
+  (let ((stream (ipynb.stream-output-name output)))
+  (make-stream-output-entity
+    :stream (if (string= "stdout" stream)
+                :stdout
+                (if (string= "stderr" stream)
+                    :stderr))
+    :source (ipynb.stream-output-text output))))
+
+(defun %convert-to-display-data-output-entity (output)
+  (make-display-data-output-entity
+    :data (hash-table-to-plist (ipynb.display-data-data output))
+    :metadata (hash-table-to-plist (ipynb.display-data-metadata output))))
+
+(defun %convert-to-execute-result-output-entity (output)
+  (make-execute-result-output-entity
+    :execution-count (ipynb.execute-result-execution-count output)
+    :data (hash-table-to-plist (ipynb.execute-result-data output))
+    :metadata (hash-table-to-plist (ipynb.execute-result-metadata output))))
+
+(defun %convert-to-error-output-entity (output)
+  (make-error-output-entity
+    :name (ipynb.error-output-ename output)
+    :value (ipynb.error-output-evalue output)
+    :traceback (ipynb.error-output-traceback output)))
+
+(defun %convert-to-code-cell-output (output)
+  (typecase output
+    (ipynb.stream-output
+      (%convert-to-stream-output-entity output))
+    (ipynb.display-data
+      (%convert-to-display-data-output-entity output))
+    (ipynb.execute-result-output
+      (%convert-to-execute-result-output-entity output))
+    (ipynb.error-output
+      (%convert-to-error-output-entity output))))
+
+(defun %convert-yason-boolean (value)
+  (case value
+    ('yason:true t)
+    ('yason:false nil)
+    (otherwise value)))
+
+(defun %convert-to-code-cell-entity (cell)
+  (let ((metadata (ipynb.code-cell-metadata cell)))
+    (make-code-cell-entity
+      :source (ipynb.code-cell-source cell)
+      :execution-count (ipynb.code-cell-execution-count cell)
+      :collapsed (%convert-yason-boolean (gethash "collapsed" metadata))
+      :autoscroll (%convert-yason-boolean (gethash "autoscroll" metadata))
+      :outputs (mapcar #'%convert-to-code-cell-output (ipynb.code-cell-outputs cell)))))
+
+(defun %convert-to-note-cell-entity (cell)
+  (make-note-cell-entity
+    :format :markdown
+    :source (ipynb.markdown-cell-source cell)))
+
+(defun %convert-to-raw-cell-entity (cell)
+  (make-raw-cell-entity
+    :format (gethash "format" (ipynb.raw-cell-metadata))
+    :source (ipynb.raw-cell-source cell)))
+
+(defun %map-to-cell-entity (cell)
+  (typecase cell
+    (ipynb.code-cell
+      (%convert-to-code-cell-entity cell))
+    (ipynb.markdown-cell
+      (%convert-to-note-cell-entity cell))
+    (ipynb.raw-cell
+      (%convert-to-raw-cell-entity cell))))
+
+(defun convert-to-cells-from-ipynb (ipynb)
+  (let ((cells (ipynb-format-cells ipynb)))
+    (mapcar #'%map-to-cell-entity cells)))
