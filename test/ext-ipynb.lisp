@@ -43,4 +43,8 @@
          (serialized (serialize.ipynb ipynb)))
     (is serialized *serialized*)))
 
+(subtest "Convert ipynb format structure to domain cell objects"
+  (let* ((cells (convert-to-cells-from-ipynb *ipynb*)))
+    (is cells *cells*)))
+
 (finalize)
