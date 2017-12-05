@@ -341,5 +341,82 @@
     (yason:encode ipynb stream)
     (get-output-stream-string stream)))
 
-(defun deserialize.ipynb ()
-  )
+(defun %hash-table-to-stream-output (ht)
+  (make-ipynb.stream-output
+    :output-type "stream"
+    :name (gethash "name" ht)
+    :text (gethash "text" ht)))
+
+(defun %hash-table-to-display-data (ht)
+  (make-ipynb.display-data
+    :output-type "display_data"
+    :data (gethash "data" ht)
+    :metadata (gethash "metadata" ht)))
+
+(defun %hash-table-to-execute-result (ht)
+  (make-ipynb.execute-result
+    :output-type "execute_result"
+    :execution-count (gethash "execution_count" ht)
+    :data (gethash "data" ht)
+    :metadata (gethash "metadata" ht)))
+
+(defun %hash-table-to-error-output (ht)
+  (make-ipynb.error-output
+    :output-type "error"
+    :ename (gethash "ename" ht)
+    :evalue (gethash "evalue" ht)
+    :traceback (gethash "traceback" ht)))
+
+(defun %hash-table-to-code-cell-output (ht)
+  (let ((output-type (gethash "output_type" ht)))
+    (if (string= "stream" output-type)
+        (%hash-table-to-stream-output ht)
+        (if (string= "display_data" output-type)
+            (%hash-table-to-display-data ht)
+            (if (string= "execute_result" output-type)
+                (%hash-table-to-execute-result ht)
+                (if (string= "error" output-type)
+                    (%hash-table-to-error-output ht)))))))
+
+(defun %hash-table-to-code-cell (ht)
+  (let ((metadata (gethash "metadata" ht)))
+    (maphash (lambda (key val)
+               (if (typep val 'boolean)
+                   (setf (gethash key metadata)
+                         (if val 'yason:true 'yason:false))))
+             metadata)
+    (make-ipynb.code-cell
+      :cell-type "code"
+      :metadata (gethash "metadata" ht)
+      :source (gethash "source" ht)
+      :execution-count (gethash "execution_count" ht)
+      :outputs (mapcar #'%hash-table-to-code-cell-output (gethash "outputs" ht)))))
+
+(defun %hash-table-to-markdown-cell (ht)
+  (make-ipynb.markdown-cell
+    :cell-type "markdown"
+    :metadata (gethash "metadata" ht)
+    :source (gethash "source" ht)))
+
+(defun %hash-table-to-raw-cell (ht)
+  (make-ipynb.raw-cell
+    :cell-type "raw"
+    :metadata (gethash "metadata" ht)
+    :source (gethash "source" ht)))
+
+(defun %hash-table-to-cell (ht)
+  (let ((cell-type (gethash "cell_type" ht)))
+    (if (string= "code" cell-type)
+        (%hash-table-to-code-cell ht)
+        (if (string= "markdown" cell-type)
+            (%hash-table-to-markdown-cell ht)
+            (if (string= "raw" cell-type)
+                (%hash-table-to-raw-cell ht))))))
+
+(defun hash-table-to-ipynb (ht)
+  (make-ipynb-format
+    :metadata (gethash "metadata" ht)
+    :cells (mapcar #'%hash-table-to-cell (gethash "cells" ht))))
+
+(defun deserialize.ipynb (str)
+  (hash-table-to-ipynb (yason:parse str)))
