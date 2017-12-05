@@ -12,7 +12,7 @@
 
 (diag "Serialize/Deserialize .ipynb tests")
 
-(plan 2)
+(plan 3)
 
 (defvar *cells*
   (list
@@ -45,6 +45,6 @@
 
 (subtest "Convert ipynb format structure to domain cell objects"
   (let* ((cells (convert-to-cells-from-ipynb *ipynb*)))
-    (is cells *cells*)))
+    (is cells *cells* :test #'equalp)))
 
 (finalize)
