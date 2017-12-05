@@ -36,7 +36,8 @@
                 :error-output-value
                 :error-output-traceback)
   (:import-from :darkmatter/notebook/utils/convert
-                :plist-to-hash-table)
+                :plist-to-hash-table
+                :hash-table-to-plist)
   (:export :map-to-ipynb
            :serialize.ipynb
            :deserialize.ipynb
