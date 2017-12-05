@@ -29,13 +29,18 @@
                    :stream :stdout
                    :source (list "multiline stream text"))))))
 
+(defvar *ipynb* nil)
+(defvar *serialized* nil)
+
 (subtest "Serialize .ipynb"
-  (let* ((ipynb (map-to-ipynb *cells*))
-         (serialized (serialize.ipynb ipynb)))
-    (is serialized
-        "{\"metadata\":{\"signature\":\"hex-digest\",\"kernel_info\":{\"name\":\"darkmatter\"},\"language_info\":{\"name\":\"common-lisp\",\"version\":\"X3J13\",\"codemirror_mode\":\"commonlisp\"}},\"nbformat\":4,\"nbformat_minor\":0,\"cells\":[{\"cell_type\":\"markdown\",\"metadata\":{},\"source\":[\"some *markdown*\"]},{\"cell_type\":\"code\",\"execution_count\":1,\"metadata\":{\"collapsed\":true,\"autoscroll\":false},\"source\":\"some code\",\"outputs\":[{\"output_type\":\"stream\",\"name\":\"stdout\",\"text\":[\"multiline stream text\"]}]}]}")))
+  (setf *ipynb* (map-to-ipynb *cells*)
+        *serialized* (serialize.ipynb *ipynb*))
+  (is *serialized*
+      "{\"metadata\":{\"signature\":\"hex-digest\",\"kernel_info\":{\"name\":\"darkmatter\"},\"language_info\":{\"name\":\"common-lisp\",\"version\":\"X3J13\",\"codemirror_mode\":\"commonlisp\"}},\"nbformat\":4,\"nbformat_minor\":0,\"cells\":[{\"cell_type\":\"markdown\",\"metadata\":{},\"source\":[\"some *markdown*\"]},{\"cell_type\":\"code\",\"execution_count\":1,\"metadata\":{\"collapsed\":true,\"autoscroll\":false},\"source\":\"some code\",\"outputs\":[{\"output_type\":\"stream\",\"name\":\"stdout\",\"text\":[\"multiline stream text\"]}]}]}"))
 
 (subtest "Deserialize .ipynb"
-  )
+  (let* ((ipynb (deserialize.ipynb *serialized*))
+         (serialized (serialize.ipynb ipynb)))
+    (is serialized *serialized*)))
 
 (finalize)
