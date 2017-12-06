@@ -34,10 +34,12 @@
                  (:module "utils"
                           :components ((:file "split")
                                        (:file "convert")
-                                       (:file "string-case")))
+                                       (:file "string-case")
+                                       (:file "file")))
                  (:module "domains"
                           :components ((:file "cell")))
-                 (:file "extention" :depends-on ("extentions"))
+                 (:file "extention" :depends-on ("extentions"
+                                                 "utils"))
                  (:module "extentions"
                           :components ((:file "ext-ipynb")
                 ;                       ;(:module "lisp"
