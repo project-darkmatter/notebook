@@ -65,7 +65,7 @@
       (yason:encode-object-element "source"
         (ipynb.cell-source object)))))
 
-(deftype %ipynb.code-cell-execution-count () '(or integer nil))
+(deftype %ipynb.code-cell-execution-count () '(or integer null))
 (deftype %ipynb.code-cell-outputs () 'list)
 (defstruct (ipynb.code-cell (:include ipynb.cell))
   (execution-count 0 :type %ipynb.code-cell-execution-count)
@@ -456,7 +456,7 @@
       (%convert-to-stream-output-entity output))
     (ipynb.display-data
       (%convert-to-display-data-output-entity output))
-    (ipynb.execute-result-output
+    (ipynb.execute-result
       (%convert-to-execute-result-output-entity output))
     (ipynb.error-output
       (%convert-to-error-output-entity output))))
