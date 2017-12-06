@@ -44,8 +44,8 @@
 (defstruct (cell-entity (:conc-name cell-))
   (id 0 :type cell-id))
 
-(deftype %code-cell-source () 'string)
-(deftype %code-cell-execution-count () 'integer)
+(deftype %code-cell-source () '(or string list))
+(deftype %code-cell-execution-count () '(or integer null))
 (deftype %code-cell-collapsed () 'boolean)
 (deftype %code-cell-autoscroll () 'boolean)
 (deftype %code-cell-outputs () 'list)
