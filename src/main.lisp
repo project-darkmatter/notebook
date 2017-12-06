@@ -25,7 +25,7 @@
            (rest (rest url)))
       (if (null first)
           ;nil
-          (service.notebook env "")
+          (service.notebook env nil)
           (cond
             ((string= first "tree") nil)
             ((string= first "relative") nil)
@@ -35,7 +35,10 @@
 
 (defvar *web*
   (builder
-    (:static :path (lambda (path) nil)
+    (:static :path (lambda (path)
+                     (if (string= "static"
+                                  (car (split-url path)))
+                         path))
              :root *root-directory*)
     *router*))
 
