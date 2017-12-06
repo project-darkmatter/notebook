@@ -7,5 +7,5 @@
 (defun read-file-into-string (pathname)
   (with-open-file (in pathname :direction :input)
     (let ((buf (make-string (file-length in))))
-      (read-sequence buf s)
+      (read-sequence buf in)
       buf)))
