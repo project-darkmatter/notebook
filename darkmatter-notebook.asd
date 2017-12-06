@@ -33,7 +33,8 @@
                 ; (:file "config")
                  (:module "utils"
                           :components ((:file "split")
-                                       (:file "convert")))
+                                       (:file "convert")
+                                       (:file "string-case")))
                  (:module "domains"
                           :components ((:file "cell")))
                  (:file "extention" :depends-on ("extentions"))
