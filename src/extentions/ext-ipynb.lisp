@@ -483,7 +483,7 @@
 
 (defun %convert-to-raw-cell-entity (cell)
   (make-raw-cell-entity
-    :format (gethash "format" (ipynb.raw-cell-metadata))
+    :format (gethash "format" (ipynb.raw-cell-metadata cell))
     :source (ipynb.raw-cell-source cell)))
 
 (defun %map-to-cell-entity (cell)
