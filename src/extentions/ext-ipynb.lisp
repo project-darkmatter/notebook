@@ -2,35 +2,28 @@
 (defpackage darkmatter/notebook/extentions/ipynb
   (:use :cl)
   (:import-from :darkmatter/notebook/domains/cell
-                :make-code-cell-entity
                 :code-cell-entity
                 :code-cell-source
                 :code-cell-execution-count
                 :code-cell-collapsed
                 :code-cell-autoscroll
                 :code-cell-outputs
-                :make-note-cell-entity
                 :note-cell-entity
                 :note-cell-format
                 :note-cell-source
-                :make-raw-cell-entity
                 :raw-cell-entity
                 :raw-cell-format
                 :raw-cell-source
-                :make-stream-output-entity
                 :stream-output-entity
                 :stream-output-stream
                 :stream-output-source
-                :make-display-data-output-entity
                 :display-data-output-entity
                 :display-data-output-data
                 :display-data-output-metadata
-                :make-execute-result-output-entity
                 :execute-result-output-entity
                 :execute-result-output-execution-count
                 :execute-result-output-data
                 :execute-result-output-metadata
-                :make-error-output-entity
                 :error-output-entity
                 :error-output-name
                 :error-output-value
@@ -426,7 +419,7 @@
 
 (defun %convert-to-stream-output-entity (output)
   (let ((stream (ipynb.stream-output-name output)))
-  (make-stream-output-entity
+  (make-instance 'stream-output-entity
     :stream (if (string= "stdout" stream)
                 :stdout
                 (if (string= "stderr" stream)
@@ -434,18 +427,18 @@
     :source (ipynb.stream-output-text output))))
 
 (defun %convert-to-display-data-output-entity (output)
-  (make-display-data-output-entity
+  (make-instance 'display-data-output-entity
     :data (hash-table-to-plist (ipynb.display-data-data output))
     :metadata (hash-table-to-plist (ipynb.display-data-metadata output))))
 
 (defun %convert-to-execute-result-output-entity (output)
-  (make-execute-result-output-entity
+  (make-instance 'execute-result-output-entity
     :execution-count (ipynb.execute-result-execution-count output)
     :data (hash-table-to-plist (ipynb.execute-result-data output))
     :metadata (hash-table-to-plist (ipynb.execute-result-metadata output))))
 
 (defun %convert-to-error-output-entity (output)
-  (make-error-output-entity
+  (make-instance 'error-output-entity
     :name (ipynb.error-output-ename output)
     :value (ipynb.error-output-evalue output)
     :traceback (ipynb.error-output-traceback output)))
@@ -469,7 +462,7 @@
 
 (defun %convert-to-code-cell-entity (cell)
   (let ((metadata (ipynb.code-cell-metadata cell)))
-    (make-code-cell-entity
+    (make-instance 'code-cell-entity
       :source (ipynb.code-cell-source cell)
       :execution-count (ipynb.code-cell-execution-count cell)
       :collapsed (%convert-yason-boolean (gethash "collapsed" metadata))
@@ -477,12 +470,12 @@
       :outputs (mapcar #'%convert-to-code-cell-output (ipynb.code-cell-outputs cell)))))
 
 (defun %convert-to-note-cell-entity (cell)
-  (make-note-cell-entity
+  (make-instance 'note-cell-entity
     :format :markdown
     :source (ipynb.markdown-cell-source cell)))
 
 (defun %convert-to-raw-cell-entity (cell)
-  (make-raw-cell-entity
+  (make-instance 'raw-cell-entity
     :format (gethash "format" (ipynb.raw-cell-metadata cell))
     :source (ipynb.raw-cell-source cell)))
 
