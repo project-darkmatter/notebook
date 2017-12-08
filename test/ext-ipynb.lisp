@@ -4,9 +4,9 @@
         :darkmatter/notebook/extentions/ipynb
         :prove)
   (:import-from :darkmatter/notebook/domains/cell
-                :make-note-cell-entity
-                :make-code-cell-entity
-                :make-stream-output-entity))
+                :note-cell-entity
+                :code-cell-entity
+                :stream-output-entity))
 (in-package :darkmatter/notebook/test/extentions/ipynb)
 
 
@@ -16,16 +16,16 @@
 
 (defvar *cells*
   (list
-    (make-note-cell-entity
+    (make-instance 'note-cell-entity
       :format :markdown
       :source (list "some *markdown*"))
-    (make-code-cell-entity
+    (make-instance 'code-cell-entity
       :source "some code"
       :execution-count 1
       :collapsed t
       :autoscroll nil
       :outputs (list
-                 (make-stream-output-entity
+                 (make-instance 'stream-output-entity
                    :stream :stdout
                    :source (list "multiline stream text"))))))
 
@@ -45,6 +45,6 @@
 
 (subtest "Convert ipynb format structure to domain cell objects"
   (let* ((cells (convert-to-cells-from-ipynb *ipynb*)))
-    (is cells *cells* :test #'equalp)))
+    (is-print (princ cells) (write-to-string *cells*))))
 
 (finalize)
