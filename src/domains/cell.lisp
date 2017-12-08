@@ -173,7 +173,7 @@
 (deftype %error-output-value () 'string)
 (deftype %error-output-traceback () 'list)
 (defclass error-output-entity (output-entity)
-  ((name :initarg :data
+  ((name :initarg :name
          :initform nil
          :type %error-output-name
          :reader error-output-name)
