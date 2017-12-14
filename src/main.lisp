@@ -7,6 +7,8 @@
                 :clackup)
   (:import-from :darkmatter/notebook/utils/split
                 :split-url)
+  (:import-from :darkmatter/notebook/utils/string-case
+                :string-case)
   (:import-from :darkmatter/notebook/services/notebook
                 :service.notebook)
   (:export :start
@@ -26,11 +28,11 @@
       (if (null first)
           ;nil
           (service.notebook env nil)
-          (cond
-            ((string= first "tree") nil)
-            ((string= first "relative") nil)
-            ((string= first "absolute") nil)
-            ((string= first "api") nil)
+          (string-case first
+            ("tree" nil)
+            ("relative" nil)
+            ("absolute" nil)
+            ("api" nil)
             (t nil))))))
 
 (defvar *web*
