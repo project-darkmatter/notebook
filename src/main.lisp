@@ -11,6 +11,8 @@
                 :string-case)
   (:import-from :darkmatter/notebook/services/notebook
                 :service.notebook)
+  (:import-from :darkmatter/notebook/services/api
+                :service.api)
   (:export :start
            :stop))
 (in-package :darkmatter/notebook)
@@ -32,7 +34,8 @@
             ("tree" nil)
             ("relative" nil)
             ("absolute" nil)
-            ("api" nil)
+            ("api" (if (eq :PUT (getf :request-method env))
+                       (service.api env rest)))
             (t nil))))))
 
 (defvar *web*
