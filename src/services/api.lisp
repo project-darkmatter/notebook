@@ -4,5 +4,5 @@
   (:export :service.api))
 (in-package :darkmatter/notebook/services/notebook)
 
-(defun service.api (env)
-  nil)
+(defun service.api (env rest)
+  (declare (ignore rest)))
