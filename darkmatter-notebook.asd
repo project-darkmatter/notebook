@@ -57,7 +57,7 @@
                                        ;(:file "tree")
                                        ))
                  (:module "services"
-                          :components (;(:file "api")
+                          :components ((:file "api")
                                        (:file "notebook")
                 ;                       ;(:file "relative")
                 ;                       ;(:file "absolute")
