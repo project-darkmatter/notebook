@@ -4,7 +4,7 @@
   (:export :service.api))
 (in-package :darkmatter/notebook/services/api)
 
-(defparameter +server-ip+ "127.0.0.1")
+(defparameter +server-ip+ "127.0.0.1") ;; TODO Configurable with command line arguments
 
 (defparameter +launch-server+
   (if (= 0 (third (multiple-value-list (uiop:run-program "which darkmatter" :ignore-error-status t))))
@@ -90,7 +90,7 @@
   (let ((raw-body (%read-raw-body env))
         (request (%map-to-request
                    (handler-case (yason:parse raw-body)
-                     (error (e) nil)))))
+                     (error (e) nil))))) ;; TODO Error handling - Invalid format
     (if request
         (let* ((descripter (%request-descripter request))
                (instance (gethash descripter *server-table*)))
@@ -101,5 +101,5 @@
                  (json (encode-to-string result)))
             `(200 (:content-type "application/json")
               (,(%response-result (%request-id request) json)))))
-        nil)))
+        nil))) ;; TODO Error handling - Missing method or parameters
 
