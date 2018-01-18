@@ -26,7 +26,7 @@
       (return (parse-integer string :start (1+ index) :junk-allowed t)))))
 
 (defun %make-server-process (logfile &key (timeout 50))
-  (let* ((server (uiop:launch-program (format nil "~A --log=~A" +launch-server+ logfile)
+  (let* ((server (uiop:launch-program (format nil "~A" +launch-server+)
                                       :output :stream))
          (port nil)
          (client (jsonrpc:make-client)))
@@ -87,10 +87,11 @@
 
 (defun service.api (env rest)
   (declare (ignore rest))
-  (let ((raw-body (%read-raw-body env))
-        (request (%map-to-request
-                   (handler-case (yason:parse raw-body)
-                     (error (e) nil))))) ;; TODO Error handling - Invalid format
+  (format t "[IN] SERVICE.API~%")
+  (let* ((raw-body (%read-raw-body env))
+         (request (%map-to-request
+                    (handler-case (yason:parse raw-body)
+                      (error (e) nil))))) ;; TODO Error handling - Invalid format
     (if request
         (let* ((descripter (%request-descripter request))
                (instance (gethash descripter *server-table*)))
@@ -98,7 +99,7 @@
             (setf instance (%make-server-process descripter)))
           (let* ((client (%client instance))
                  (result (jsonrpc:call client (%request-method request) (%request-params request)))
-                 (json (encode-to-string result)))
+                 (json (%encode-to-string result)))
             `(200 (:content-type "application/json")
               (,(%response-result (%request-id request) json)))))
         nil))) ;; TODO Error handling - Missing method or parameters
