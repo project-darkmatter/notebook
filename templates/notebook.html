@@ -9,6 +9,8 @@
   <script src="static/css/axion/axion.js"></script>
   <script src="static/js/codemirror/codemirror.js"></script>
   <script src="static/js/codemirror/commonlisp.js"></script>
+  <script src="static/js/http.js"></script>
+  <script src="static/js/client.js"></script>
 </head>
 <body class="ax-background" fit="true">
   <header class="ax-appbar ax-primary">
@@ -92,7 +94,15 @@
           </pre>
         </div>
       </li>
+      {% for cell in notebook %}
+      <li class="ax-panel ax-normal" w-1-2 center>
+        <div class="ax-container ax-content">
+          {{ cell }}
+        </div>
+      </li>
+      {% endfor %}
     </ul>
+    {{ hoge.baz }}
   </section>
 </body>
 </html>
