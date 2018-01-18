@@ -8,16 +8,31 @@ class Darkmatter {
   constructor(host, clientId, descripter) {
     this.host = host;
     this.httpUri = `http://${host}`;
-    this.clientId = cliendId;
+    this.clientId = clientId;
     this.descripter = descripter;
     this.token = null;
+  }
+
+  static makeRequest(method, params, clientId = null, descripter = "default") {
+    let object = {
+      "jsonrpc": "2.0",
+      "method": method,
+      "params": params,
+      "descripter": descripter
+    };
+    if (clientId != null) {
+      object.id = clientId;
+    }
+    return JSON.stringify(object);
   }
 
   sendTCP(request) {
     console.log("[UP] " + request);
     return new Promise((resolve, reject) => {
-      http.put(this.httpUri + '/eval/', request).then(json => {
-        console.log("[DOWN] Resolve " + json);
+      let uri = this.httpUri + '/api/';
+      console.log("[UP] Send request to " + uri);
+      http.put(uri, request).then(json => {
+        console.log("[DOWN] Resolve " + JSON.stringify(json));
         resolve(json);
       }).catch(err => {
         console.log("[DOWN] Reject");
@@ -31,7 +46,7 @@ class Darkmatter {
     let proc = this.sendTCP.bind(this);
     proc(request)
       .then(json => {
-        if (json.id && json.id !== this.id) {
+        if (json.id && json.id !== this.clientId) {
           trueReject(new Error("INVALID_ID"));
         } else {
           trueResolve(json);
@@ -62,12 +77,19 @@ class Darkmatter {
   }
 
   eval(code, cellId, outputRendering = true, optional = null) {
-    const request = EvalClient.makeRequest('darkmatter/eval', {
+    const request = Darkmatter.makeRequest('darkmatter/eval', {
       code: code,
       outputRendering: outputRendering,
       cellId: cellId,
       optional: optional
-    }, this.id, this.descripter);
+    }, this.clientId, this.descripter);
+    return this.request(request);
+  }
+
+  getResult(taskId, cellId, outputRendering = true, optional = null) {
+    const request = Darkmatter.makeRequest('darkmatter/getResult', {
+      taskId: taskId
+    }, this.clientId, this.descripter);
     return this.request(request);
   }
 
