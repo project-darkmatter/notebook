@@ -34,7 +34,7 @@
             ("tree" nil)
             ("relative" nil)
             ("absolute" nil)
-            ("api" (if (eq :PUT (getf :request-method env))
+            ("api" (if (eq :PUT (getf env :request-method))
                        (service.api env rest)))
             (t nil))))))
 
