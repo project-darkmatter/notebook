@@ -19,7 +19,8 @@
                           :components
                           ((:test-file "convert")
                            (:test-file "file")
-                           (:test-file "split")))
+                           (:test-file "split")
+                           (:test-file "string-case")))
                 (:test-file "ext-ipynb")
                  ;(:test-file "view")
                  ;(:test-file "services")
