@@ -15,7 +15,10 @@
                :prove)
   :components ((:module "test"
                 :components
-                ((:test-file "ext-ipynb")
+                ((:module "utils"
+                          :components
+                          ((:test-file "convert")))
+                (:test-file "ext-ipynb")
                  ;(:test-file "view")
                  ;(:test-file "services")
                  )
