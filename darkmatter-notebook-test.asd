@@ -17,7 +17,8 @@
                 :components
                 ((:module "utils"
                           :components
-                          ((:test-file "convert")))
+                          ((:test-file "convert")
+                           (:test-file "file")))
                 (:test-file "ext-ipynb")
                  ;(:test-file "view")
                  ;(:test-file "services")
