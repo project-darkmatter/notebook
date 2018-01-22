@@ -13,6 +13,8 @@ __IEditor__ = new IEditor(
   },
   editor =>
     editor.getValue(),
+  (editor, str) =>
+    editor.setValue(str),
   (editor, fun) => {
     editor.setOption("extraKeys", {
       "Ctrl-Enter": fun
