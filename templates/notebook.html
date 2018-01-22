@@ -15,8 +15,9 @@
   <script src="static/js/ICodeMirror.js"></script>
   <script>
     let client;
+    let descripter = "{{ descripter }}";
     window.onload = () => {
-      client = new Darkmatter('localhost:5000', 5213, "test");
+      client = new Darkmatter('localhost:5000', 5213, descripter);
       let cellListElement = document.getElementById('dm-cell-list');
       for(let elm of document.querySelectorAll(".dm-code-cell")) {
         new CodeCell(client, cellListElement, elm);
