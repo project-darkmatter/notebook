@@ -21,12 +21,14 @@
   (make-hash-table :test #'equal))
 
 (defun %parse-port-number (string)
-  (dotimes (index (length string))
-    (when (eq #\: (char string index))
-      (return (parse-integer string :start (1+ index) :junk-allowed t)))))
+  (let ((index (search "localhost:" string)))
+    (if index
+        (parse-integer string :start (+ index #.(length "localhost:")) :junk-allowed t))))
 
 (defun %make-server-process (logfile &key (timeout 50))
-  (let* ((server (uiop:launch-program (format nil "~A" +launch-server+)
+  ;; TODO Check logfile exists
+  ;; TODO Read port number from logfile
+  (let* ((server (uiop:launch-program (format nil "~A --log=~A" +launch-server+ logfile)
                                       :output :stream))
          (port nil)
          (client (jsonrpc:make-client)))
@@ -35,9 +37,8 @@
           (format t ".")
           (force-output)
           (sleep 1)
-          (setf port (%parse-port-number
-                       (read-line
-                         (uiop:process-info-output server)))))
+          (let ((line (read-line (uiop:process-info-output server))))
+            (setf port (%parse-port-number line))))
     (fresh-line)
     (make-server-port-client :server server
                              :port port
