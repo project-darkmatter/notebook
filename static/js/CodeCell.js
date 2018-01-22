@@ -80,13 +80,20 @@ class CodeCell {
   receive() {
     this.client.getResult(this.taskId, 0).then(json => {
       if (json.result.status) {
-        if (json.result.content.status === 'RUNNING') {
-          console.log(json.result.content);
-          setTimeout(this.receive.bind(this), 10);
-        } else {
-          console.log(json.result.content.status);
-          console.log(json.result.content.value);
-          console.log(json.result.content.output);
+        switch (json.result.content.status) {
+          case 'SUCCESS':
+            this.initOutput();
+            this.output.innerHTML = json.result.content.value + '\n' + json.result.content.output;
+            break;
+          case 'RUNNING':
+            this.initOutput();
+            this.output.innerHTML = "\n" + json.result.content.output;
+            setTimeout(this.receive.bind(this), 1000);
+            break;
+          case 'FAILURE':
+            this.initOutput();
+            this.output.innerHTML = json.result.content.output + '\n' + JSON.stringify(json.result.content.context);
+            break;
         }
       } else {
         console.error(json);
