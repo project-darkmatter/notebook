@@ -7,7 +7,8 @@
 
 (let* ((djula:*current-store* *pages-store*)
        (template (djula:compile-template* "notebook.html")))
-  (defun view.notebook (notebook)
+  (defun view.notebook (notebook descripter)
     (render-html
       (djula:render-template* template nil
-                              :notebook notebook))))
+                              :notebook notebook
+                              :descripter descripter))))
