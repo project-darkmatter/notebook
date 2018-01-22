@@ -13,6 +13,17 @@
   <script src="static/js/client.js"></script>
   <script src="static/js/CodeCell.js"></script>
   <script src="static/js/ICodeMirror.js"></script>
+  <script>
+    let client;
+    window.onload = () => {
+      client = new Darkmatter('localhost:5000', 5213, "test");
+      let cellListElement = document.getElementById('dm-cell-list');
+      for(let elm of document.querySelectorAll(".dm-code-cell")) {
+        new CodeCell(client, cellListElement, elm);
+      }
+      new CodeCell(client, cellListElement);
+    };
+  </script>
 </head>
 <body class="ax-background" fit="true">
   <header class="ax-appbar ax-primary">
@@ -75,36 +86,14 @@
     <div id="dm-sidebar" class="ax-sidebar ax-primary ax-panel">
     </div>
     <ul id="dm-cell-list" class="ax-container ax-list" unstyle item-spacing vpad>
-      <li class="ax-panel ax-normal" w-1-2 center>
-        <textarea class="dm-editor">(format t "Hello world!~%")</textarea>
-        <script>
-          for(let elm of document.querySelectorAll(".dm-editor")) {
-            let editor = CodeMirror.fromTextArea(elm, {
-              mode: "commonlisp",
-              lineNumbers: true,
-              tabSize: 2,
-              matchBrackets: true,
-              viewportMargin: Infinity
-            });
-            editor.setSize("100%", "auto");
-          }
-        </script>
-      </li>
-      <li class="ax-panel ax-normal" w-1-2 center>
-        <div class="ax-container ax-content">
-          <pre>Hello world!
-          </pre>
-        </div>
-      </li>
       {% for cell in notebook %}
       <li class="ax-panel ax-normal" w-1-2 center>
-        <div class="ax-container ax-content">
-          {{ cell }}
-        </div>
+        {% ifequal cell.type "code" %}
+        <div class="dm-code-cell">{{ cell.source }}</div>
+        {% endifequal %}
       </li>
       {% endfor %}
     </ul>
-    {{ hoge.baz }}
   </section>
 </body>
 </html>
