@@ -34,10 +34,14 @@
 (in-package :darkmatter/notebook/domains/cell)
 
 (deftype cell-id () 'integer)
+(deftype cell-type () 'string)
 (defclass cell-entity ()
   ((id :initarg :id
        :initform 0
-       :type cell-id)))
+       :type cell-id)
+   (type :initarg :type
+         :initform ""
+         :type cell-type)))
 
 (deftype %code-cell-source () '(or string list))
 (deftype %code-cell-execution-count () '(or integer null))
@@ -45,7 +49,8 @@
 (deftype %code-cell-autoscroll () 'boolean)
 (deftype %code-cell-outputs () 'list)
 (defclass code-cell-entity (cell-entity)
-  ((source :initarg :source
+  ((type :initform "code")
+   (source :initarg :source
            :initform ""
            :type %code-cell-source
            :reader code-cell-source)
@@ -66,16 +71,17 @@
             :type %code-cell-outputs
             :reader code-cell-outputs)))
 (defmethod print-object ((o code-cell-entity) s)
-  (with-slots (source execution-count collapsed autoscroll outputs) o
+  (with-slots (type source execution-count collapsed autoscroll outputs) o
     (print-unreadable-object (o s :type t)
-      (format s "~%~Tsource = ~S~%~Texecution-count = ~S~%~Tcollapsed = ~S~%~Tautoscroll = ~S~%~Toutputs = ~S"
-              source execution-count collapsed autoscroll outputs))))
+      (format s "~%~Ttype = ~S~%~Tsource = ~S~%~Texecution-count = ~S~%~Tcollapsed = ~S~%~Tautoscroll = ~S~%~Toutputs = ~S"
+              type source execution-count collapsed autoscroll outputs))))
 
 
 (deftype %note-cell-format () '(member :markdown :asciidoc :latex))
 (deftype %note-cell-source () 'list)
 (defclass note-cell-entity (cell-entity)
-  ((format :initarg :format
+  ((type :initform "note")
+   (format :initarg :format
            :initform :markdown
            :type %note-cell-format
            :reader note-cell-format)
@@ -92,7 +98,8 @@
 (deftype %raw-cell-format () 'string)
 (deftype %raw-cell-source () 'list)
 (defclass raw-cell-entity (cell-entity)
-  ((format :initarg :format
+  ((type :initform "raw")
+   (format :initarg :format
            :initform ""
            :type %raw-cell-format
            :reader raw-cell-format)
