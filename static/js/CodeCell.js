@@ -21,7 +21,7 @@ class CodeCell {
     parent.appendChild(this.element);
     this.editor = CodeCell.__editor__(this.element, oldChild);
     if (oldChild) {
-      __IEditor__.setText(this.editor, oldChild.innerHTML);
+      __IEditor__.setText(this.editor, oldChild.innerText);
     }
     this.output = null;
     this.active = true;
