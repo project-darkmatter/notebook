@@ -1,8 +1,9 @@
 
 class IEditor {
-  constructor(create, getText, setCtrlSpace) {
+  constructor(create, getText, setText, setCtrlSpace) {
     this.create = create;
     this.getText = getText;
+    this.setText = setText;
     this.setCtrlSpace = setCtrlSpace;
   }
 }
@@ -10,11 +11,19 @@ class IEditor {
 let __IEditor__ = null;
 
 class CodeCell {
-  constructor(client, parent) {
+  constructor(client, parent, oldChild = null) {
     this.client = client;
-    this.element = CodeCell.__container__();
+    if (oldChild) {
+      this.element = oldChild.parentNode;
+    } else {
+      this.element = CodeCell.__container__();
+    }
     parent.appendChild(this.element);
-    this.editor = CodeCell.__editor__(this.element);
+    this.editor = CodeCell.__editor__(this.element, oldChild);
+    if (oldChild) {
+      __IEditor__.setText(this.editor, oldChild.innerHTML);
+    }
+    this.output = null;
     this.active = true;
     this.taskId = null;
     this.initEditor();
@@ -29,15 +38,33 @@ class CodeCell {
     return elm;
   }
 
-  static __editor__(parent) {
+  static __editor__(parent, oldChild = null) {
     let elm = document.createElement('textarea');
     elm.classList.add('dm-editor');
-    parent.appendChild(elm);
+    if (oldChild) {
+      parent.replaceChild(elm, oldChild);
+    } else {
+      parent.appendChild(elm);
+    }
     return __IEditor__.create(elm);
+  }
+
+  static __output__() {
+    let elm = document.createElement('pre');
+    elm.classList.add('ax-container');
+    elm.classList.add('ax-normal');
+    return elm;
   }
 
   initEditor() {
     __IEditor__.setCtrlSpace(this.editor, this.send.bind(this));
+  }
+
+  initOutput() {
+    if (this.output === null) {
+      this.output = CodeCell.__output__();
+      this.element.appendChild(this.output);
+    }
   }
 
   send() {
