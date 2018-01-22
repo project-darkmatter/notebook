@@ -11,6 +11,8 @@
   <script src="static/js/codemirror/commonlisp.js"></script>
   <script src="static/js/http.js"></script>
   <script src="static/js/client.js"></script>
+  <script src="static/js/CodeCell.js"></script>
+  <script src="static/js/ICodeMirror.js"></script>
 </head>
 <body class="ax-background" fit="true">
   <header class="ax-appbar ax-primary">
@@ -72,7 +74,7 @@
   <section class="ax-with-sidebar" maximize>
     <div id="dm-sidebar" class="ax-sidebar ax-primary ax-panel">
     </div>
-    <ul class="ax-container ax-list" unstyle item-spacing vpad>
+    <ul id="dm-cell-list" class="ax-container ax-list" unstyle item-spacing vpad>
       <li class="ax-panel ax-normal" w-1-2 center>
         <textarea class="dm-editor">(format t "Hello world!~%")</textarea>
         <script>
