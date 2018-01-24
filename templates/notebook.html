@@ -9,6 +9,7 @@
   <script src="static/css/axion/axion.js"></script>
   <script src="static/js/codemirror/codemirror.js"></script>
   <script src="static/js/codemirror/commonlisp.js"></script>
+  <script src="static/js/csi.js"></script>
   <script src="static/js/http.js"></script>
   <script src="static/js/client.js"></script>
   <script src="static/js/CodeCell.js"></script>
@@ -21,6 +22,9 @@
       let cellListElement = document.getElementById('dm-cell-list');
       for(let elm of document.querySelectorAll(".dm-code-cell")) {
         new CodeCell(client, cellListElement, elm);
+      }
+      for(let elm of document.querySelectorAll(".dm-error-output")) {
+        replaceCSI(elm);
       }
       new CodeCell(client, cellListElement);
     };
@@ -92,8 +96,16 @@
         {% ifequal cell.type "code" %}
         <div class="dm-code-cell">{{ cell.source }}</div>
         {% for output in cell.outputs %}
-          <pre>{% for text in output.data.text/plain %}{{ text }}{% endfor %}</pre>
+          {% if output.data.text/plain %}<pre class="dm-text-output">{% for text in output.data.text/plain %}{{ text }}{% endfor %}</pre>{% endif %}
+          {% if output.data.image/png %}<img style="width:50%;" src='data:image/png;base64,{{ output.data.image/png }}' />{% endif %}
+          {% if output.traceback %}<pre class="dm-error-output">{% for traceback in output.traceback %}{{ traceback }}{% endfor %}</pre>{% endif %}
         {% endfor %}
+        {% endifequal %}
+        {% ifequal cell.type "raw" %}
+        <div class="dm-raw-cell">{{ cell }}</div>
+        {% endifequal %}
+        {% ifequal cell.type "note" %}
+        <div class="dm-note-cell">{{ cell }}</div>
         {% endifequal %}
       </li>
       {% endfor %}
