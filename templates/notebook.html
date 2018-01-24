@@ -91,6 +91,9 @@
       <li class="ax-panel ax-normal" w-1-2 center>
         {% ifequal cell.type "code" %}
         <div class="dm-code-cell">{{ cell.source }}</div>
+        {% for output in cell.outputs %}
+          <pre>{% for text in output.data.text/plain %}{{ text }}{% endfor %}</pre>
+        {% endfor %}
         {% endifequal %}
       </li>
       {% endfor %}
