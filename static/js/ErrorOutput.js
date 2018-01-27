@@ -20,6 +20,8 @@ class ErrorOutput {
 
   static __container__() {
     let elm = document.createElement("div");
+    elm.style.overflowX = 'scroll';
+    elm.classList.add("dm-error-output");
     return elm;
   }
 
