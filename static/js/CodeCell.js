@@ -23,7 +23,12 @@ class CodeCell {
     if (oldChild) {
       __IEditor__.setText(this.editor, oldChild.innerText);
     }
-    this.output = null;
+    let errorOutput = this.element.querySelector('.dm-error-output');
+    if (errorOutput) {
+      this.output = new ErrorOutput(errorOutput).element;
+    } else {
+      this.output = null;
+    }
     this.active = true;
     this.taskId = null;
     this.initEditor();
@@ -82,6 +87,7 @@ class CodeCell {
       if (json.result.status) {
         switch (json.result.content.status) {
           case 'SUCCESS':
+            console.log(this.output);
             this.initOutput();
             this.output.innerHTML = json.result.content.value + '\n' + json.result.content.output;
             break;
@@ -93,6 +99,7 @@ class CodeCell {
           case 'FAILURE':
             this.initOutput();
             this.output.innerHTML = json.result.content.output + '\n' + JSON.stringify(json.result.content.context);
+            this.output = new ErrorOutput(this.output).element;
             break;
         }
       } else {
