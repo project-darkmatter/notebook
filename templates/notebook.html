@@ -24,10 +24,6 @@
       for(let elm of document.querySelectorAll(".dm-code-cell")) {
         new CodeCell(client, cellListElement, elm);
       }
-      for(let elm of document.querySelectorAll(".dm-error-output")) {
-        //replaceCSI(elm);
-        new ErrorOutput(elm);
-      }
       new CodeCell(client, cellListElement);
     };
   </script>
