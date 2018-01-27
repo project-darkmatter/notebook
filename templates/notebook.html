@@ -14,6 +14,7 @@
   <script src="static/js/client.js"></script>
   <script src="static/js/CodeCell.js"></script>
   <script src="static/js/ICodeMirror.js"></script>
+  <script src="static/js/ErrorOutput.js"></script>
   <script>
     let client;
     let descripter = "{{ descripter }}";
@@ -24,7 +25,8 @@
         new CodeCell(client, cellListElement, elm);
       }
       for(let elm of document.querySelectorAll(".dm-error-output")) {
-        replaceCSI(elm);
+        //replaceCSI(elm);
+        new ErrorOutput(elm);
       }
       new CodeCell(client, cellListElement);
     };
