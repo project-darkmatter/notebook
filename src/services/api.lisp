@@ -93,6 +93,8 @@
          (request (%map-to-request
                     (handler-case (yason:parse raw-body)
                       (error (e) nil))))) ;; TODO Error handling - Invalid format
+    (format t "~A~%" request)
+    (format t "~A~%" (%encode-to-string (%request-params request)))
     (if request
         (let* ((descripter (%request-descripter request))
                (instance (gethash descripter *server-table*)))
@@ -100,7 +102,7 @@
             (setf instance (%make-server-process descripter)
                   (gethash descripter *server-table*) instance))
           (let* ((client (%client instance))
-                 (result (jsonrpc:call client (%request-method request) (%request-params request)))
+                 (result (jsonrpc:call client (%request-method request) (%request-params request) :timeout 3.0))
                  (json (%encode-to-string result)))
             `(200 (:content-type "application/json")
               (,(%response-result (%request-id request) json)))))
