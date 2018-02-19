@@ -43,8 +43,8 @@
     (make-server-port-client :server server
                              :port port
                              :client (jsonrpc:client-connect client
-                                                             :url (format nil "ws://~A:~A" +server-ip+ port)
-                                                             :mode :websocket))))
+                                                             :url (format nil "http://~A:~A" +server-ip+ port)
+                                                             :mode :tcp))))
 
 (defun %read-raw-body (env)
   (let ((raw-body (flexi-streams:make-flexi-stream
@@ -102,7 +102,7 @@
             (setf instance (%make-server-process descripter)
                   (gethash descripter *server-table*) instance))
           (let* ((client (%client instance))
-                 (result (jsonrpc:call client (%request-method request) (%request-params request) :timeout 3.0))
+                 (result (jsonrpc:call client (%request-method request) (%request-params request) :timeout 30.0))
                  (json (%encode-to-string result)))
             `(200 (:content-type "application/json")
               (,(%response-result (%request-id request) json)))))
